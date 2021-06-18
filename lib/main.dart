@@ -1,3 +1,5 @@
+import 'package:bottini/routes/app_routes.dart';
+import 'package:bottini/views/product_detail_screen.dart';
 import 'package:bottini/views/products_overview_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +16,7 @@ class BottiniApp extends StatelessWidget {
         fontFamily: 'Lato',
       ),
       home: ProductOverviewScreen(),
+      routes: {AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailScreen()},
     );
   }
 }
