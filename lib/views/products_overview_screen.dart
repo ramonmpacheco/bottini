@@ -1,5 +1,6 @@
 import 'package:bottini/data/dummy_data.dart';
 import 'package:bottini/models/product.dart';
+import 'package:bottini/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 
 class ProductOverviewScreen extends StatelessWidget {
@@ -14,7 +15,7 @@ class ProductOverviewScreen extends StatelessWidget {
       body: GridView.builder(
         padding: const EdgeInsets.all(10),
         itemCount: loadedProducts.length,
-        itemBuilder: (ctx, index) => Text(loadedProducts[0].title),
+        itemBuilder: (ctx, index) => ProductItem(loadedProducts[index]),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 3 / 2,
