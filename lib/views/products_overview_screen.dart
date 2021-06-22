@@ -1,4 +1,5 @@
 import 'package:bottini/providers/cart.dart';
+import 'package:bottini/routes/app_routes.dart';
 import 'package:bottini/widgets/badge.dart';
 import 'package:bottini/widgets/product_grid.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,9 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           Consumer<Cart>(
             child: IconButton(
               icon: Icon(Icons.shopping_cart),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppRoutes.CART_DETAIL);
+              },
             ),
             builder: (_, cart, child) => Badge(
               value: cart.itemCount.toString(),
