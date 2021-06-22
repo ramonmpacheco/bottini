@@ -1,5 +1,8 @@
+import 'package:bottini/providers/cart.dart';
+import 'package:bottini/widgets/badge.dart';
 import 'package:bottini/widgets/product_grid.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 enum FilterOptions { FAVORITE, ALL }
 
@@ -17,6 +20,16 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
       appBar: AppBar(
         title: Text('Loja Bottini'),
         actions: [
+          Consumer<Cart>(
+            child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {},
+            ),
+            builder: (_, cart, child) => Badge(
+              value: cart.itemCount.toString(),
+              child: child,
+            ),
+          ),
           PopupMenuButton(
             icon: Icon(Icons.more_vert),
             onSelected: (FilterOptions value) {
