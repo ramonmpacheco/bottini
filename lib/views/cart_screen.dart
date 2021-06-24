@@ -1,4 +1,5 @@
 import 'package:bottini/providers/cart.dart';
+import 'package:bottini/providers/orders.dart';
 import 'package:bottini/widgets/cart_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +40,12 @@ class CartScreen extends StatelessWidget {
                   ),
                   Spacer(),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Provider.of<Orders>(context, listen: false)
+                          .addOrder(cart);
+
+                      cart.clear();
+                    },
                     child: Text('COMPRAR'),
                   )
                 ],
