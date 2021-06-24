@@ -1,4 +1,5 @@
 import 'package:bottini/providers/cart.dart';
+import 'package:bottini/providers/orders.dart';
 import 'package:bottini/providers/products.dart';
 import 'package:bottini/routes/app_routes.dart';
 import 'package:bottini/views/cart_screen.dart';
@@ -19,6 +20,9 @@ class BottiniApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => Cart(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => Orders(),
         ),
       ],
       child: MaterialApp(
