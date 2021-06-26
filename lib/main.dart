@@ -6,6 +6,7 @@ import 'package:bottini/views/cart_screen.dart';
 import 'package:bottini/views/orders_screen.dart';
 import 'package:bottini/views/product_detail_screen.dart';
 import 'package:bottini/views/products_overview_screen.dart';
+import 'package:bottini/views/products_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,7 @@ class BottiniApp extends StatelessWidget {
           AppRoutes.ORDERS: (ctx) => OrdersScreen(),
           AppRoutes.CART_DETAIL: (ctx) => CartScreen(),
           AppRoutes.HOME: (ctx) => ProductOverviewScreen(),
+          AppRoutes.PRODUCTS: (ctx) => ProductsScreen(),
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailScreen(),
         },
       ),
