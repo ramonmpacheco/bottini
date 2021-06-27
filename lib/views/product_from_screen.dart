@@ -32,11 +32,32 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
   }
 
   void _updateImage() {
-    setState(() {});
+    if (_isValidImageUrl(_imageUrlController.text)) {
+      setState(() {});
+    }
+  }
+
+  bool _isValidImageUrl(String url) {
+    bool startsWithHttp = url.toLowerCase().startsWith('http://');
+    bool startsWithHttps = url.toLowerCase().startsWith('https://');
+
+    bool endsWithPng = url.toLowerCase().endsWith('.png');
+    bool endsWithJpg = url.toLowerCase().endsWith('.jpg');
+    bool endsWithJpeg = url.toLowerCase().endsWith('.jpeg');
+
+    return (startsWithHttp || startsWithHttps) &&
+        (endsWithPng || endsWithJpg || endsWithJpeg);
   }
 
   void _saveForm() {
+    bool isValid = _form.currentState.validate();
+
+    if (!isValid) {
+      return;
+    }
+
     _form.currentState.save();
+
     final newProduct = Product(
       id: Random().nextDouble().toString(),
       title: _formData['title'],
@@ -72,6 +93,17 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
                 onFieldSubmitted: (_) =>
                     FocusScope.of(context).requestFocus(_priceFocusNode),
                 onSaved: (value) => _formData['title'] = value,
+                validator: (value) {
+                  bool empty = value.trim().isEmpty;
+                  bool invalid = value.trim().length < 3;
+                  if (empty) {
+                    return 'Informe um título';
+                  }
+                  if (invalid) {
+                    return 'Mínimo 3 caracteres';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Preço'),
@@ -81,6 +113,15 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
                 onFieldSubmitted: (_) =>
                     FocusScope.of(context).requestFocus(_descriptionFocusNode),
                 onSaved: (value) => _formData['price'] = double.parse(value),
+                validator: (value) {
+                  bool empty = value.trim().isEmpty;
+                  var price = double.tryParse(value);
+                  bool invalid = price == null || price <= 0;
+                  if (empty || invalid) {
+                    return 'Informe um preço válido';
+                  }
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Descrição'),
@@ -91,6 +132,17 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
                 onFieldSubmitted: (_) =>
                     FocusScope.of(context).requestFocus(_imageUrlFocusNode),
                 onSaved: (value) => _formData['description'] = value,
+                validator: (value) {
+                  bool empty = value.trim().isEmpty;
+                  bool invalid = value.trim().length < 10;
+                  if (empty) {
+                    return 'Informe uma descrição';
+                  }
+                  if (invalid) {
+                    return 'Mínimo 10 caracteres';
+                  }
+                  return null;
+                },
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -106,6 +158,14 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
                         _saveForm();
                       },
                       onSaved: (value) => _formData['imageUrl'] = value,
+                      validator: (value) {
+                        bool empty = value.trim().isEmpty;
+                        bool invalid = !_isValidImageUrl(value);
+                        if (empty || invalid) {
+                          return 'Informe uma Url válida';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                   Container(
