@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductFormScreem extends StatefulWidget {
   @override
@@ -7,6 +8,14 @@ class ProductFormScreem extends StatefulWidget {
 
 class _ProductFormScreemState extends State<ProductFormScreem> {
   final _priceFocusNode = FocusNode();
+  final _descriptionFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _priceFocusNode.dispose();
+    _descriptionFocusNode.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +37,17 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
               TextFormField(
                 decoration: InputDecoration(labelText: 'Preço'),
                 textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) =>
+                    FocusScope.of(context).requestFocus(_descriptionFocusNode),
                 focusNode: _priceFocusNode,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Descrição'),
+                maxLines: 3,
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.next,
+                focusNode: _descriptionFocusNode,
               ),
             ],
           ),
