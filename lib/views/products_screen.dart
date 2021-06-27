@@ -1,4 +1,5 @@
 import 'package:bottini/providers/products.dart';
+import 'package:bottini/routes/app_routes.dart';
 import 'package:bottini/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,12 @@ class ProductsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Gerenciar Produtos'),
         actions: [
-          IconButton(icon: const Icon(Icons.add), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.of(context).pushNamed(AppRoutes.PRODUCT_FORM);
+            },
+          ),
         ],
       ),
       body: Padding(
