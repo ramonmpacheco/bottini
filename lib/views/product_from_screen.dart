@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:bottini/models/product.dart';
 import 'package:flutter/material.dart';
 
 class ProductFormScreem extends StatefulWidget {
@@ -10,6 +13,8 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
   final _descriptionFocusNode = FocusNode();
   final _imageUrlFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
+  final _form = GlobalKey<FormState>();
+  final _formData = Map<String, Object>();
 
   @override
   void dispose() {
@@ -30,15 +35,35 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
     setState(() {});
   }
 
+  void _saveForm() {
+    _form.currentState.save();
+    final newProduct = Product(
+      id: Random().nextDouble().toString(),
+      title: _formData['title'],
+      description: _formData['description'],
+      price: _formData['price'],
+      imageUrl: _formData['imageUrl'],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Formulário'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.save),
+            onPressed: () {
+              _saveForm();
+            },
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Form(
+          key: _form,
           child: ListView(
             children: [
               TextFormField(
@@ -46,6 +71,7 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) =>
                     FocusScope.of(context).requestFocus(_priceFocusNode),
+                onSaved: (value) => _formData['title'] = value,
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Preço'),
@@ -54,6 +80,7 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 onFieldSubmitted: (_) =>
                     FocusScope.of(context).requestFocus(_descriptionFocusNode),
+                onSaved: (value) => _formData['price'] = double.parse(value),
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Descrição'),
@@ -63,6 +90,7 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
                 focusNode: _descriptionFocusNode,
                 onFieldSubmitted: (_) =>
                     FocusScope.of(context).requestFocus(_imageUrlFocusNode),
+                onSaved: (value) => _formData['description'] = value,
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -74,6 +102,10 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
                       textInputAction: TextInputAction.done,
                       focusNode: _imageUrlFocusNode,
                       controller: _imageUrlController,
+                      onFieldSubmitted: (_) {
+                        _saveForm();
+                      },
+                      onSaved: (value) => _formData['imageUrl'] = value,
                     ),
                   ),
                   Container(
