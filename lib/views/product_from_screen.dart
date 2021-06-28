@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:bottini/models/product.dart';
+import 'package:bottini/providers/products.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductFormScreem extends StatefulWidget {
   @override
@@ -59,12 +61,14 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
     _form.currentState.save();
 
     final newProduct = Product(
-      id: Random().nextDouble().toString(),
       title: _formData['title'],
       description: _formData['description'],
       price: _formData['price'],
       imageUrl: _formData['imageUrl'],
     );
+
+    Provider.of<Products>(context, listen: false).addProduct(newProduct);
+    Navigator.of(context).pop();
   }
 
   @override
