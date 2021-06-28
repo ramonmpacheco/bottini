@@ -1,4 +1,5 @@
 import 'package:bottini/models/product.dart';
+import 'package:bottini/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 
 class ProductItem extends StatelessWidget {
@@ -20,7 +21,10 @@ class ProductItem extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.edit),
               color: Theme.of(context).primaryColor,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamed(AppRoutes.PRODUCT_FORM, arguments: product);
+              },
             ),
             IconButton(
               icon: Icon(Icons.delete),

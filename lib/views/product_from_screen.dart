@@ -33,6 +33,19 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
     _imageUrlFocusNode.addListener(_updateImage);
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_formData.isEmpty) {
+      final product = ModalRoute.of(context).settings.arguments as Product;
+      _formData['id'] = product.id;
+      _formData['title'] = product.title;
+      _formData['description'] = product.description;
+      _formData['price'] = product.price;
+      _formData['imageUrl'] = product.imageUrl;
+    }
+  }
+
   void _updateImage() {
     if (_isValidImageUrl(_imageUrlController.text)) {
       setState(() {});
