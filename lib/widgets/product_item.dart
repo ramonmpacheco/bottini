@@ -1,6 +1,8 @@
 import 'package:bottini/models/product.dart';
+import 'package:bottini/providers/products.dart';
 import 'package:bottini/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductItem extends StatelessWidget {
   final Product product;
@@ -29,7 +31,28 @@ class ProductItem extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.delete),
               color: Theme.of(context).errorColor,
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: Text('Tem certeza'),
+                    content: Text('Quer deletar o produto?'),
+                    actions: [
+                      TextButton(
+                          child: Text('Não'),
+                          onPressed: () => Navigator.of(ctx).pop(false)),
+                      TextButton(
+                          child: Text('Sim'),
+                          onPressed: () => Navigator.of(ctx).pop(true)),
+                    ],
+                  ),
+                ).then((deleteConfirmed) {
+                  if (deleteConfirmed) {
+                    Provider.of<Products>(context, listen: false)
+                        .deleteProduct(product.id);
+                  }
+                });
+              },
             ),
           ],
         ),
