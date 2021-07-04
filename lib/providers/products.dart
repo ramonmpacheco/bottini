@@ -15,9 +15,9 @@ class Products with ChangeNotifier {
     return _items.where((product) => product.isFavorite).toList();
   }
 
-  void addProduct(Product newProduct) {
+  Future<void> addProduct(Product newProduct) {
     var url = Uri.parse('https://minha_url');
-    http
+    return http
         .post(
       url,
       body: json.encode({
