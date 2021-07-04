@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:bottini/models/product.dart';
 import 'package:bottini/providers/products.dart';
 import 'package:flutter/material.dart';
@@ -214,8 +212,8 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
                     alignment: Alignment.center,
                     child: _imageUrlController.text.isEmpty
                         ? Text('Informe a URL')
-                        : FittedBox(
-                            child: Image.network(_imageUrlController.text),
+                        : Image.network(
+                            _imageUrlController.text,
                             fit: BoxFit.cover,
                           ),
                   ),

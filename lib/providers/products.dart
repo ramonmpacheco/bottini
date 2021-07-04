@@ -16,8 +16,9 @@ class Products with ChangeNotifier {
   }
 
   void addProduct(Product newProduct) {
-    var url = Uri.parse('minha_url');
-    http.post(
+    var url = Uri.parse('https://minha_url');
+    http
+        .post(
       url,
       body: json.encode({
         'title': newProduct.title,
@@ -26,16 +27,19 @@ class Products with ChangeNotifier {
         'imageUrl': newProduct.imageUrl,
         'ifFavorite': newProduct.isFavorite
       }),
-    );
-
-    _items.add(Product(
-      id: Random().nextDouble().toString(),
-      title: newProduct.title,
-      description: newProduct.description,
-      price: newProduct.price,
-      imageUrl: newProduct.imageUrl,
-    ));
-    notifyListeners();
+    )
+        .then((response) {
+      _items.add(
+        Product(
+          id: json.decode(response.body)['name'],
+          title: newProduct.title,
+          description: newProduct.description,
+          price: newProduct.price,
+          imageUrl: newProduct.imageUrl,
+        ),
+      );
+      notifyListeners();
+    });
   }
 
   void updateProduct(Product product) {
