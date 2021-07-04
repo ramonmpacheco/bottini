@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:bottini/data/dummy_data.dart';
 import 'package:bottini/models/product.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
   List<Product> _items = DUMMY_PRODUCTS;
@@ -14,6 +16,18 @@ class Products with ChangeNotifier {
   }
 
   void addProduct(Product newProduct) {
+    var url = Uri.parse('minha_url');
+    http.post(
+      url,
+      body: json.encode({
+        'title': newProduct.title,
+        'description': newProduct.description,
+        'price': newProduct.price,
+        'imageUrl': newProduct.imageUrl,
+        'ifFavorite': newProduct.isFavorite
+      }),
+    );
+
     _items.add(Product(
       id: Random().nextDouble().toString(),
       title: newProduct.title,
