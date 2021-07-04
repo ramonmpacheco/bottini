@@ -92,13 +92,26 @@ class _ProductFormScreemState extends State<ProductFormScreem> {
 
     final products = Provider.of<Products>(context, listen: false);
     if (_formData['id'] == null) {
-      products
-        ..addProduct(product).then((_) {
-          setState(() {
-            this._isLoading = false;
-          });
-          Navigator.of(context).pop();
+      products.addProduct(product).catchError((onError) {
+        return showDialog<Null>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Ocorreu um erro'),
+            content: Text('Erro inesperado ao salvar o produto'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Ok'),
+              )
+            ],
+          ),
+        );
+      }).then((_) {
+        setState(() {
+          this._isLoading = false;
         });
+        Navigator.of(context).pop();
+      });
     } else {
       products.updateProduct(product);
       setState(() {
