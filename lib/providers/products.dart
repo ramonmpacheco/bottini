@@ -15,10 +15,11 @@ class Products with ChangeNotifier {
     return _items.where((product) => product.isFavorite).toList();
   }
 
-  Future<void> addProduct(Product newProduct) {
-    var url = Uri.parse('https://minha_url');
-    return http
-        .post(
+  Future<void> addProduct(Product newProduct) async {
+    var url = Uri.parse(
+        'https://flutter-bottini-default-rtdb.firebaseio.com/products.json');
+
+    final response = await http.post(
       url,
       body: json.encode({
         'title': newProduct.title,
@@ -27,19 +28,17 @@ class Products with ChangeNotifier {
         'imageUrl': newProduct.imageUrl,
         'ifFavorite': newProduct.isFavorite
       }),
-    )
-        .then((response) {
-      _items.add(
-        Product(
-          id: json.decode(response.body)['name'],
-          title: newProduct.title,
-          description: newProduct.description,
-          price: newProduct.price,
-          imageUrl: newProduct.imageUrl,
-        ),
-      );
-      notifyListeners();
-    });
+    );
+    _items.add(
+      Product(
+        id: json.decode(response.body)['name'],
+        title: newProduct.title,
+        description: newProduct.description,
+        price: newProduct.price,
+        imageUrl: newProduct.imageUrl,
+      ),
+    );
+    notifyListeners();
   }
 
   void updateProduct(Product product) {
