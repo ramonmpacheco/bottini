@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
+  final Uri _url = Uri.parse('https://minha_url');
+
   List<Product> _items = DUMMY_PRODUCTS;
 
   List<Product> get items => [..._items];
@@ -15,12 +17,14 @@ class Products with ChangeNotifier {
     return _items.where((product) => product.isFavorite).toList();
   }
 
-  Future<void> addProduct(Product newProduct) async {
-    var url = Uri.parse(
-        'https://flutter-bottini-default-rtdb.firebaseio.com/products.json');
+  Future<void> loadProducts() async {
+    final response = await http.get(_url);
+    json.decode(response.body);
+  }
 
+  Future<void> addProduct(Product newProduct) async {
     final response = await http.post(
-      url,
+      _url,
       body: json.encode({
         'title': newProduct.title,
         'description': newProduct.description,

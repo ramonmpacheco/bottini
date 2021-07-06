@@ -1,4 +1,5 @@
 import 'package:bottini/providers/cart.dart';
+import 'package:bottini/providers/products.dart';
 import 'package:bottini/routes/app_routes.dart';
 import 'package:bottini/views/app_drawer.dart';
 import 'package:bottini/widgets/badge.dart';
@@ -15,6 +16,12 @@ class ProductOverviewScreen extends StatefulWidget {
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   bool _showFavoriteOnly = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<Products>(context, listen: false).loadProducts();
+  }
 
   @override
   Widget build(BuildContext context) {
