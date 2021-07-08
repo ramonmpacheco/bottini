@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:bottini/data/dummy_data.dart';
 import 'package:bottini/models/product.dart';
@@ -9,7 +8,7 @@ import 'package:http/http.dart' as http;
 class Products with ChangeNotifier {
   final Uri _url = Uri.parse('https://minha_url');
 
-  List<Product> _items = DUMMY_PRODUCTS;
+  List<Product> _items = [];
 
   List<Product> get items => [..._items];
 
@@ -19,7 +18,23 @@ class Products with ChangeNotifier {
 
   Future<void> loadProducts() async {
     final response = await http.get(_url);
-    json.decode(response.body);
+    Map<String, dynamic> data = json.decode(response.body);
+
+    if (data != null) {
+      data.forEach((productId, productData) {
+        _items.add(
+          Product(
+              id: productId,
+              title: productData['title'],
+              description: productData['description'],
+              price: productData['price'],
+              imageUrl: productData['imageUrl'],
+              isFavorite: productData['isFavorite']),
+        );
+      });
+      notifyListeners();
+    }
+    return Future.value();
   }
 
   Future<void> addProduct(Product newProduct) async {
@@ -30,7 +45,7 @@ class Products with ChangeNotifier {
         'description': newProduct.description,
         'price': newProduct.price,
         'imageUrl': newProduct.imageUrl,
-        'ifFavorite': newProduct.isFavorite
+        'isFavorite': newProduct.isFavorite
       }),
     );
     _items.add(
