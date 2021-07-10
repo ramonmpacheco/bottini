@@ -6,7 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
-  final Uri _url = Uri.parse('https://minha_url');
+  final Uri _url = Uri.parse(
+      'https://flutter-bottini-default-rtdb.firebaseio.com/products.json');
 
   List<Product> _items = [];
 
@@ -19,6 +20,8 @@ class Products with ChangeNotifier {
   Future<void> loadProducts() async {
     final response = await http.get(_url);
     Map<String, dynamic> data = json.decode(response.body);
+
+    _items.clear();
 
     if (data != null) {
       data.forEach((productId, productData) {
