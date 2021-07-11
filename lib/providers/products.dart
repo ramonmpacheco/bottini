@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bottini/data/dummy_data.dart';
+import 'package:bottini/exceptions/http_exception.dart';
 import 'package:bottini/models/product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -83,11 +83,23 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id) {
+  Future<void> deleteProduct(String id) async {
     final int index = _items.indexWhere((product) => product.id == id);
+
     if (index >= 0) {
-      _items.removeWhere((product) => product.id == id);
+      final product = _items[index];
+
+      _items.remove(product);
       notifyListeners();
+
+      final response =
+          await http.delete(Uri.parse("$_baseUrl/${product.id}.json"));
+
+      if (response.statusCode >= 400) {
+        _items.insert(index, product);
+        notifyListeners();
+        throw new HttpException("Ocorreu erro na exclusão do produto.");
+      }
     }
   }
 
