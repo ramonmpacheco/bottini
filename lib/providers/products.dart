@@ -6,8 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 class Products with ChangeNotifier {
-  final Uri _url = Uri.parse(
-      'https://flutter-bottini-default-rtdb.firebaseio.com/products.json');
+  final String _baseUrl = 'https://minha_url/products';
 
   List<Product> _items = [];
 
@@ -18,7 +17,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> loadProducts() async {
-    final response = await http.get(_url);
+    final response = await http.get(Uri.parse("$_baseUrl.json"));
     Map<String, dynamic> data = json.decode(response.body);
 
     _items.clear();
@@ -42,7 +41,7 @@ class Products with ChangeNotifier {
 
   Future<void> addProduct(Product newProduct) async {
     final response = await http.post(
-      _url,
+      Uri.parse("$_baseUrl.json"),
       body: json.encode({
         'title': newProduct.title,
         'description': newProduct.description,
@@ -63,13 +62,22 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateProduct(Product product) {
+  Future<void> updateProduct(Product product) async {
     if (product != null && product.id == null) {
       return;
     }
 
     final index = _items.indexWhere((p) => p.id == product.id);
     if (index >= 0) {
+      await http.patch(
+        Uri.parse("$_baseUrl/${product.id}.json"),
+        body: json.encode({
+          'title': product.title,
+          'description': product.description,
+          'price': product.price,
+          'imageUrl': product.imageUrl,
+        }),
+      );
       _items[index] = product;
       notifyListeners();
     }
