@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:bottini/env.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 class Product with ChangeNotifier {
   final String id;
@@ -17,8 +21,29 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  void toggleFavorite() {
+  void _doToggleFavorite() {
     isFavorite = !isFavorite;
     notifyListeners();
+  }
+
+  Future<void> toggleFavorite() async {
+    _doToggleFavorite();
+
+    try {
+      final url = Uri.parse("${AppRoutes.PRODUCT_BASE_URL}/$id.json");
+
+      final response = await http.patch(
+        url,
+        body: json.encode({
+          'isFavorite': isFavorite,
+        }),
+      );
+
+      if (response.statusCode >= 400) {
+        _doToggleFavorite();
+      }
+    } catch (error) {
+      _doToggleFavorite();
+    }
   }
 }
