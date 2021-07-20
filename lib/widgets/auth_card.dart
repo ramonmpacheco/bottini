@@ -8,12 +8,45 @@ class AuthCard extends StatefulWidget {
 }
 
 class _AuthCardState extends State<AuthCard> {
+  GlobalKey<FormState> _form = GlobalKey();
+  bool _isLoading = false;
   AuthMode _authMode = AuthMode.LOGIN;
   final _passwordController = TextEditingController();
 
   Map<String, String> _authData = {'email': '', 'password': ''};
 
-  void _submit() {}
+  void _submit() {
+    if (!_form.currentState.validate()) {
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    _form.currentState.save();
+
+    if (_authMode == AuthMode.LOGIN) {
+      //login
+    } else {
+      // registrar
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void _switchAuthMode() {
+    if (_authMode == AuthMode.LOGIN) {
+      setState(() {
+        _authMode = AuthMode.SIGN_UP;
+      });
+    } else {
+      setState(() {
+        _authMode = AuthMode.LOGIN;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +58,11 @@ class _AuthCardState extends State<AuthCard> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Container(
-        height: 320,
+        height: _authMode == AuthMode.LOGIN ? 310 : 370,
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
+          key: _form,
           child: Column(
             children: [
               TextFormField(
@@ -57,7 +91,6 @@ class _AuthCardState extends State<AuthCard> {
               if (_authMode == AuthMode.SIGN_UP)
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Confirmar Senha'),
-                  controller: _passwordController,
                   obscureText: true,
                   validator: _authMode == AuthMode.SIGN_UP
                       ? (value) {
@@ -67,26 +100,33 @@ class _AuthCardState extends State<AuthCard> {
                           return null;
                         }
                       : null,
-                  onSaved: (value) => _authData['email'] = value,
                 ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                style: ButtonStyle(
-                  padding: MaterialStateProperty.all<EdgeInsets>(
-                    EdgeInsets.symmetric(
-                      horizontal: 30.0,
-                      vertical: 8.0,
+              Spacer(),
+              if (_isLoading)
+                CircularProgressIndicator()
+              else
+                ElevatedButton(
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                      EdgeInsets.symmetric(
+                        horizontal: 30.0,
+                        vertical: 8.0,
+                      ),
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                     ),
                   ),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
+                  onPressed: _submit,
+                  child: Text(
+                      _authMode == AuthMode.LOGIN ? 'ENTRAR' : 'REGISTRAR'),
                 ),
-                onPressed: _submit,
-                child:
-                    Text(_authMode == AuthMode.LOGIN ? 'ENTRAR' : 'REGISTRAR'),
+              TextButton(
+                onPressed: _switchAuthMode,
+                child: Text(
+                    "Alternar p/ ${_authMode == AuthMode.LOGIN ? 'REGISTRAR' : 'LOGIN'}"),
               ),
             ],
           ),
