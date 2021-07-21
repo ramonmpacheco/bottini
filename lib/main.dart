@@ -1,3 +1,4 @@
+import 'package:bottini/providers/auth.dart';
 import 'package:bottini/providers/cart.dart';
 import 'package:bottini/providers/orders.dart';
 import 'package:bottini/providers/products.dart';
@@ -19,6 +20,7 @@ class BottiniApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => Auth()),
         ChangeNotifierProvider(create: (_) => Cart()),
         ChangeNotifierProvider(create: (_) => Orders()),
         ChangeNotifierProvider(create: (_) => Products()),

@@ -1,4 +1,6 @@
+import 'package:bottini/providers/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 enum AuthMode { SIGN_UP, LOGIN }
 
@@ -15,7 +17,7 @@ class _AuthCardState extends State<AuthCard> {
 
   Map<String, String> _authData = {'email': '', 'password': ''};
 
-  void _submit() {
+  Future<void> _submit() async {
     if (!_form.currentState.validate()) {
       return;
     }
@@ -26,10 +28,12 @@ class _AuthCardState extends State<AuthCard> {
 
     _form.currentState.save();
 
+    Auth auth = Provider.of<Auth>(context, listen: false);
+
     if (_authMode == AuthMode.LOGIN) {
       //login
     } else {
-      // registrar
+      await auth.signup(_authData['email'], _authData['password']);
     }
     setState(() {
       _isLoading = false;
@@ -81,12 +85,12 @@ class _AuthCardState extends State<AuthCard> {
                 controller: _passwordController,
                 obscureText: true,
                 validator: (value) {
-                  if (value.isEmpty || value.length > 5) {
+                  if (value.isEmpty || value.length < 5) {
                     return 'Senha Inválida';
                   }
                   return null;
                 },
-                onSaved: (value) => _authData['email'] = value,
+                onSaved: (value) => _authData['password'] = value,
               ),
               if (_authMode == AuthMode.SIGN_UP)
                 TextFormField(

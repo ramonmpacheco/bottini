@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import '../env.dart';
 
 class Products with ChangeNotifier {
-  final String _baseUrl = AppRoutes.PRODUCT_BASE_URL;
+  final String _baseUrl = Env.PRODUCT_BASE_URL;
 
   List<Product> _items = [];
 

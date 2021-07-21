@@ -30,7 +30,7 @@ class Product with ChangeNotifier {
     _doToggleFavorite();
 
     try {
-      final url = Uri.parse("${AppRoutes.PRODUCT_BASE_URL}/$id.json");
+      final url = Uri.parse("${Env.PRODUCT_BASE_URL}/$id.json");
 
       final response = await http.patch(
         url,

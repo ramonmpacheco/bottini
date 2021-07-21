@@ -21,7 +21,7 @@ class Order {
 }
 
 class Orders with ChangeNotifier {
-  final String _baseUrl = "${AppRoutes.ORDERS_BASE_URL}";
+  final String _baseUrl = "${Env.ORDERS_BASE_URL}";
 
   List<Order> _items = [];
 
