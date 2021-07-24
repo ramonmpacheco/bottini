@@ -1,3 +1,4 @@
+import 'package:bottini/exceptions/auth_exception.dart';
 import 'package:bottini/providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,23 @@ class _AuthCardState extends State<AuthCard> {
   final _passwordController = TextEditingController();
 
   Map<String, String> _authData = {'email': '', 'password': ''};
+  void _showErrorDialog(String msg) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Ocorreu um erro!'),
+        content: Text(msg),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Fechar'),
+          )
+        ],
+      ),
+    );
+  }
 
   Future<void> _submit() async {
     if (!_form.currentState.validate()) {
@@ -30,11 +48,18 @@ class _AuthCardState extends State<AuthCard> {
 
     Auth auth = Provider.of<Auth>(context, listen: false);
 
-    if (_authMode == AuthMode.LOGIN) {
-      await auth.login(_authData['email'], _authData['password']);
-    } else {
-      await auth.signup(_authData['email'], _authData['password']);
+    try {
+      if (_authMode == AuthMode.LOGIN) {
+        await auth.login(_authData['email'], _authData['password']);
+      } else {
+        await auth.signup(_authData['email'], _authData['password']);
+      }
+    } on AuthException catch (error) {
+      _showErrorDialog(error.toString());
+    } catch (error) {
+      _showErrorDialog('Erro inesperado');
     }
+
     setState(() {
       _isLoading = false;
     });

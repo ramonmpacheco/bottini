@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bottini/env.dart';
+import 'package:bottini/exceptions/auth_exception.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,7 +18,11 @@ class Auth with ChangeNotifier {
       ),
     );
 
-    print(json.decode(response.body));
+    final responseBody = json.decode(response.body);
+
+    if (responseBody['error'] != null) {
+      throw AuthException(responseBody['error']['message']);
+    }
 
     return Future.value();
   }
