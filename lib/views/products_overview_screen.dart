@@ -1,7 +1,7 @@
 import 'package:bottini/providers/cart.dart';
 import 'package:bottini/providers/products.dart';
 import 'package:bottini/routes/app_routes.dart';
-import 'package:bottini/views/app_drawer.dart';
+import 'package:bottini/widgets/app_drawer.dart';
 import 'package:bottini/widgets/badge.dart';
 import 'package:bottini/widgets/product_grid.dart';
 import 'package:flutter/material.dart';

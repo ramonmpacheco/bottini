@@ -4,7 +4,7 @@ import 'package:bottini/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'app_drawer.dart';
+import '../widgets/app_drawer.dart';
 
 class ProductsScreen extends StatelessWidget {
   Future<void> _refreshProducts(BuildContext context) {
