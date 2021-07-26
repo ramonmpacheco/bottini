@@ -22,7 +22,11 @@ class BottiniApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => Auth()),
         ChangeNotifierProvider(create: (_) => Cart()),
         ChangeNotifierProvider(create: (_) => Orders()),
-        ChangeNotifierProvider(create: (_) => Products()),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          create: (_) => Products(null, []),
+          update: (ctx, auth, previousProducts) =>
+              Products(auth.token, previousProducts.items),
+        ),
       ],
       child: MaterialApp(
         title: 'Loja Bottini',
