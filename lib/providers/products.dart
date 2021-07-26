@@ -9,10 +9,11 @@ import '../env.dart';
 
 class Products with ChangeNotifier {
   String _token;
+  String _userId;
   List<Product> _items = [];
   final String _baseUrl = Env.PRODUCT_BASE_URL;
 
-  Products(this._token, this._items);
+  Products([this._token, this._userId, this._items = const []]);
 
   List<Product> get items => [..._items];
 
@@ -23,19 +24,24 @@ class Products with ChangeNotifier {
   Future<void> loadProducts() async {
     final response = await http.get(Uri.parse("$_baseUrl.json?auth=$_token"));
     Map<String, dynamic> data = json.decode(response.body);
+    final favoriteResponse = await http.get(
+        Uri.parse("${Env.BASE_URL}/userFavorites/$_userId.json?auth=$_token"));
+    final favMap = json.decode(favoriteResponse.body);
 
     _items.clear();
 
     if (data != null) {
       data.forEach((productId, productData) {
+        final isFavorite = favMap == null ? false : favMap[productId] ?? false;
         _items.add(
           Product(
-              id: productId,
-              title: productData['title'],
-              description: productData['description'],
-              price: productData['price'],
-              imageUrl: productData['imageUrl'],
-              isFavorite: productData['isFavorite']),
+            id: productId,
+            title: productData['title'],
+            description: productData['description'],
+            price: productData['price'],
+            imageUrl: productData['imageUrl'],
+            isFavorite: isFavorite,
+          ),
         );
       });
       notifyListeners();
@@ -51,7 +57,6 @@ class Products with ChangeNotifier {
         'description': newProduct.description,
         'price': newProduct.price,
         'imageUrl': newProduct.imageUrl,
-        'isFavorite': newProduct.isFavorite
       }),
     );
     _items.add(

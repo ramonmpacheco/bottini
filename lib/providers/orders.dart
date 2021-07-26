@@ -25,7 +25,7 @@ class Orders with ChangeNotifier {
   List<Order> _items = [];
   final String _baseUrl = "${Env.ORDERS_BASE_URL}";
 
-  Orders(this._token, this._items);
+  Orders([this._token, this._items = const []]);
 
   List<Order> get items {
     return [..._items];

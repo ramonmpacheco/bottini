@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 class Auth with ChangeNotifier {
+  String _userId;
   String _token;
   DateTime _expireDate;
 
@@ -21,6 +22,10 @@ class Auth with ChangeNotifier {
     } else {
       return null;
     }
+  }
+
+  String get userId {
+    return isAuthenticated ? this._userId : null;
   }
 
   Future<void> _authenticate(String email, String password, String url) async {
@@ -41,6 +46,7 @@ class Auth with ChangeNotifier {
       throw AuthException(responseBody['error']['message']);
     } else {
       this._token = responseBody['idToken'];
+      this._userId = responseBody['localId'];
       this._expireDate = DateTime.now().add(
         Duration(
           seconds: int.parse(responseBody['expiresIn']),
