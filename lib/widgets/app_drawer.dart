@@ -1,5 +1,7 @@
+import 'package:bottini/providers/auth.dart';
 import 'package:bottini/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -33,6 +35,14 @@ class AppDrawer extends StatelessWidget {
             title: Text('Gerenciar Produtos'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(AppRoutes.PRODUCTS);
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Sair'),
+            onTap: () {
+              Provider.of<Auth>(context, listen: false).logout();
             },
           ),
         ],

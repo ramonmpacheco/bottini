@@ -67,4 +67,11 @@ class Auth with ChangeNotifier {
     final url = '${Env.SIGN_IN}${Env.APP_KEY}';
     return this._authenticate(email, password, url);
   }
+
+  void logout() {
+    _token = null;
+    _userId = null;
+    _expireDate = null;
+    notifyListeners();
+  }
 }
