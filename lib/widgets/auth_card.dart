@@ -10,13 +10,52 @@ class AuthCard extends StatefulWidget {
   _AuthCardState createState() => _AuthCardState();
 }
 
-class _AuthCardState extends State<AuthCard> {
-  GlobalKey<FormState> _form = GlobalKey();
+class _AuthCardState extends State<AuthCard>
+    with SingleTickerProviderStateMixin {
   bool _isLoading = false;
+
   AuthMode _authMode = AuthMode.LOGIN;
+
+  GlobalKey<FormState> _form = GlobalKey();
+
   final _passwordController = TextEditingController();
 
-  Map<String, String> _authData = {'email': '', 'password': ''};
+  Animation<Size> _heightAnimation;
+  AnimationController _animationController;
+
+  Map<String, String> _authData = {
+    'email': '',
+    'password': '',
+  };
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+
+    _heightAnimation = Tween(
+      begin: Size(double.infinity, 310),
+      end: Size(double.infinity, 370),
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.linear,
+      ),
+    );
+
+    _heightAnimation.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _animationController.dispose();
+  }
+
   void _showErrorDialog(String msg) {
     showDialog(
       context: context,
@@ -70,10 +109,12 @@ class _AuthCardState extends State<AuthCard> {
       setState(() {
         _authMode = AuthMode.SIGN_UP;
       });
+      _animationController.forward();
     } else {
       setState(() {
         _authMode = AuthMode.LOGIN;
       });
+      _animationController.reverse();
     }
   }
 
@@ -87,7 +128,8 @@ class _AuthCardState extends State<AuthCard> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Container(
-        height: _authMode == AuthMode.LOGIN ? 310 : 370,
+        // height: _authMode == AuthMode.LOGIN ? 310 : 370,
+        height: _heightAnimation.value.height,
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
