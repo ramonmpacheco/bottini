@@ -125,14 +125,13 @@ class _AuthCardState extends State<AuthCard>
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      child: AnimatedBuilder(
-        animation: _heightAnimation,
-        builder: (ctx, child) => Container(
-          height: _heightAnimation.value.height,
-          width: deviceSize.width * 0.75,
-          padding: EdgeInsets.all(16.0),
-          child: child,
-        ),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+        height: _authMode == AuthMode.LOGIN ? 310 : 370,
+        // height: _heightAnimation.value.height,
+        width: deviceSize.width * 0.75,
+        padding: EdgeInsets.all(16.0),
         child: Form(
           key: _form,
           child: Column(
