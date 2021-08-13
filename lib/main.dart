@@ -3,6 +3,7 @@ import 'package:bottini/providers/cart.dart';
 import 'package:bottini/providers/orders.dart';
 import 'package:bottini/providers/products.dart';
 import 'package:bottini/routes/app_routes.dart';
+import 'package:bottini/routes/custom_route.dart';
 import 'package:bottini/views/auth_home_screen.dart';
 import 'package:bottini/views/cart_screen.dart';
 import 'package:bottini/views/orders_screen.dart';
@@ -41,10 +42,13 @@ class BottiniApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Loja Bottini',
         theme: ThemeData(
-          primarySwatch: Colors.purple,
-          accentColor: Colors.deepOrange,
-          fontFamily: 'Lato',
-        ),
+            primarySwatch: Colors.purple,
+            accentColor: Colors.deepOrange,
+            fontFamily: 'Lato',
+            pageTransitionsTheme: PageTransitionsTheme(builders: {
+              TargetPlatform.android: CustomRPageTransitionsBuilder(),
+              TargetPlatform.iOS: CustomRPageTransitionsBuilder()
+            })),
         routes: {
           AppRoutes.AUTH_HOME: (ctx) => AuthOrHomeScreen(),
           AppRoutes.ORDERS: (ctx) => OrdersScreen(),
